@@ -22,9 +22,9 @@ npm run dev
 npm run build:widget
 ```
 
-en: After building the build widget for local testing, create an HTML file in the !!!!!!'./dist-widget/weather.html' directory and add the contents. To run index.html, use the Life Server extension.
+en: After building the build widget for local testing, create an HTML file in the !!!!!!'./dist-widget/weather.html' directory and add the contents. To run weather.html, use the Life Server extension.
 
-ru: После сборки build widget для локального теста созадать в директории !!!!!!'./dist-widget/weather.html' html файл и доабвить содержимое. Чтобы запустить index.html используй расширение Life Server
+ru: После сборки build widget для локального теста созадать в директории !!!!!!'./dist-widget/weather.html' html файл и доабвить содержимое. Чтобы запустить weather.html используй расширение Life Server
 
 content/содержимое
 
