@@ -29,7 +29,6 @@ export const useGeolocation = (options: GeolocationOptions = {}): GeolocationRes
     ...options,
   }
 
-  // Функция для получения города по координатам
   const getCityByCoordinates = async (lat: number, lon: number): Promise<string | null> => {
     try {
       const url = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}&accept-language=ru`

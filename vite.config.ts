@@ -1,21 +1,44 @@
 import { fileURLToPath, URL } from 'node:url'
-
 import { defineConfig } from 'vite'
+import { resolve } from 'node:path'
 import vue from '@vitejs/plugin-vue'
-import vueDevTools from 'vite-plugin-vue-devtools'
 
-// https://github.com/vuetifyjs/vuetify-loader/tree/next/packages/vite-plugin
-import vuetify from 'vite-plugin-vuetify'
+export default defineConfig(({ mode }) => {
+  if (mode === 'widget') {
+    return {
+      plugins: [vue()],
+      resolve: {
+        alias: {
+          '@': fileURLToPath(new URL('./src', import.meta.url)),
+        },
+      },
+      build: {
+        lib: {
+          entry: resolve(__dirname, 'src/widget-loader.ts'),
+          name: 'WeatherWidget',
+          fileName: (format) => `weather-widget.${format}.js`,
+          formats: ['umd'],
+        },
+        rollupOptions: {
+          output: {
+            inlineDynamicImports: true,
+          },
+        },
+        outDir: 'dist-widget',
+        emptyOutDir: true,
+      },
+      define: {
+        'process.env.NODE_ENV': JSON.stringify('production'),
+      },
+    }
+  }
 
-// https://vite.dev/config/
-export default defineConfig({
-  plugins: [
-    vue(),
-    vueDevTools(),
-  ],
-  resolve: {
-    alias: {
-      '@': fileURLToPath(new URL('./src', import.meta.url))
+  return {
+    plugins: [vue()],
+    resolve: {
+      alias: {
+        '@': fileURLToPath(new URL('./src', import.meta.url)),
+      },
     },
-  },
+  }
 })

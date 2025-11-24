@@ -1,20 +1,3 @@
-<template>
-  <h3>Add Location</h3>
-  <v-text-field
-    v-auto-focus
-    v-model="inputValue"
-    dense
-    label="City"
-    variant="outlined"
-    @keyup.enter="handleSubmit"
-    hide-details
-  >
-    <template #append>
-      <v-btn @click="handleSubmit" :disabled="!inputValue.trim()" class="h-100"> Add </v-btn>
-    </template>
-  </v-text-field>
-</template>
-
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 
@@ -34,3 +17,20 @@ const handleSubmit = () => {
   }
 }
 </script>
+
+<template>
+  <h3>Add Location</h3>
+  <v-text-field
+    v-auto-focus
+    v-model="inputValue"
+    dense
+    label="City"
+    variant="outlined"
+    @keyup.enter="handleSubmit"
+    hide-details
+  >
+    <template #append>
+      <v-btn @click="handleSubmit" :disabled="!inputValue.trim()" class="h-100"> Add </v-btn>
+    </template>
+  </v-text-field>
+</template>

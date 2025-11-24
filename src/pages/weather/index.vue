@@ -15,17 +15,19 @@ onMounted(async () => {
 </script>
 
 <template>
-  <settings-btn class="position-fixed mr-2" style="right: 0; z-index: 100" />
+  <div class="position-relative">
+    <settings-btn class="position-absolute" style="right: 0; z-index: 100" />
 
-  <div>
-    <WeatherCardSkeleton v-if="isLoading" />
-    <template v-else>
-      <template v-if="weatherStore.getWeatherCityList.length">
-        <div v-for="weatherCity in weatherStore.getWeatherCityList" :key="weatherCity.name">
-          <weather-card :weather-data="weatherCity" />
-        </div>
+    <div>
+      <WeatherCardSkeleton v-if="isLoading" />
+      <template v-else>
+        <template v-if="weatherStore.getWeatherCityList.length">
+          <div v-for="weatherCity in weatherStore.getWeatherCityList" :key="weatherCity.name">
+            <weather-card :weather-data="weatherCity" />
+          </div>
+        </template>
+        <div v-else class="text-center my-4">Add City in Settings button</div>
       </template>
-      <div v-else class="text-center my-4">Add City in Settings button</div>
-    </template>
+    </div>
   </div>
 </template>

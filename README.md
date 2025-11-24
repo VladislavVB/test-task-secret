@@ -1,27 +1,8 @@
-# test-task-secret
+## Node version
 
-This template should help get you started developing with Vue 3 in Vite.
-
-## Recommended IDE Setup
-
-[VS Code](https://code.visualstudio.com/) + [Vue (Official)](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
-
-## Recommended Browser Setup
-
-- Chromium-based browsers (Chrome, Edge, Brave, etc.):
-  - [Vue.js devtools](https://chromewebstore.google.com/detail/vuejs-devtools/nhdogjmejiglipccpnnnanhbledajbpd) 
-  - [Turn on Custom Object Formatter in Chrome DevTools](http://bit.ly/object-formatters)
-- Firefox:
-  - [Vue.js devtools](https://addons.mozilla.org/en-US/firefox/addon/vue-js-devtools/)
-  - [Turn on Custom Object Formatter in Firefox DevTools](https://fxdx.dev/firefox-devtools-custom-object-formatters/)
-
-## Type Support for `.vue` Imports in TS
-
-TypeScript cannot handle type information for `.vue` imports by default, so we replace the `tsc` CLI with `vue-tsc` for type checking. In editors, we need [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) to make the TypeScript language service aware of `.vue` types.
-
-## Customize configuration
-
-See [Vite Configuration Reference](https://vite.dev/config/).
+```sh
+node: v22.10.0
+```
 
 ## Project Setup
 
@@ -29,20 +10,39 @@ See [Vite Configuration Reference](https://vite.dev/config/).
 npm install
 ```
 
-### Compile and Hot-Reload for Development
+### For: development
 
 ```sh
 npm run dev
 ```
 
-### Type-Check, Compile and Minify for Production
+## For: build widget
 
 ```sh
-npm run build
+npm run build:widget
 ```
 
-### Lint with [ESLint](https://eslint.org/)
+en: After building the build widget for local testing, create an HTML file in the !!!!!!'./dist-widget/weather.html' directory and add the contents. To run index.html, use the Life Server extension.
+
+ru: После сборки build widget для локального теста созадать в директории !!!!!!'./dist-widget/weather.html' html файл и доабвить содержимое. Чтобы запустить index.html используй расширение Life Server
+
+content/содержимое
 
 ```sh
-npm run lint
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TOP WIDGET</title>
+
+    <link href="./style.css" rel="stylesheet" />
+  </head>
+  <body>
+    <h1>START</h1>
+    <weather-widget />
+    <script src="weather-widget.umd.js"></script>
+  </body>
+</html>
+
 ```

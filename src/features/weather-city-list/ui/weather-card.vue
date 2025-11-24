@@ -1,3 +1,24 @@
+<script setup lang="ts">
+import type { WeatherData } from '@/entities/weather-city/weather-city.interface'
+import { useWeather } from '@/shared/composables/use-weather'
+
+interface Props {
+  weatherData: WeatherData
+}
+
+const props = defineProps<Props>()
+
+const {
+  temperature,
+  feelsLike,
+  weatherDescription,
+  windInfo,
+  dewPoint,
+  visibility,
+  getWeatherIconUrl,
+} = useWeather(props.weatherData)
+</script>
+
 <template>
   <v-card class="weather-card mb-6" flat>
     <v-card-text class="pa-4">
@@ -76,24 +97,3 @@
     </v-card-text>
   </v-card>
 </template>
-
-<script setup lang="ts">
-import type { WeatherData } from '@/entities/weather-city/model/types'
-import { useWeather } from '@/shared/composables/use-weather'
-
-interface Props {
-  weatherData: WeatherData
-}
-
-const props = defineProps<Props>()
-
-const {
-  temperature,
-  feelsLike,
-  weatherDescription,
-  windInfo,
-  dewPoint,
-  visibility,
-  getWeatherIconUrl,
-} = useWeather(props.weatherData)
-</script>

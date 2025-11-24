@@ -1,5 +1,5 @@
 import { computed } from 'vue'
-import type { WeatherData } from '@/entities/weather-city/model/types'
+import type { WeatherData } from '@/entities/weather-city/weather-city.interface'
 import {
   getWeatherIconUrl,
   capitalizeFirst,

@@ -1,4 +1,4 @@
-import type { WeatherData } from '@/entities/weather-city/model/types'
+import type { WeatherData } from '@/entities/weather-city/weather-city.interface'
 import type { City } from '@/entities/city/city.interface'
 import { defineStore } from 'pinia'
 import { apiClient } from '@/shared/api/base'
@@ -72,8 +72,6 @@ export const useWeatherCityStore = defineStore('weather-city', {
     },
 
     async fetchMultipleCitiesWeather() {
-      console.log('1')
-
       this.loading = true
       this.error = null
 
@@ -83,8 +81,6 @@ export const useWeatherCityStore = defineStore('weather-city', {
         const successfulCities: WeatherData[] = []
 
         results.forEach((result) => {
-          console.log(1, result)
-
           if (result.status === 'fulfilled' && result.value)
             successfulCities.push(result.value as WeatherData)
         })

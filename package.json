@@ -10,7 +10,9 @@
     "dev": "vite",
     "format": "prettier --write src/",
     "preview": "vite preview",
-    "type-check": "vue-tsc --build"
+    "type-check": "vue-tsc --build",
+    "build:widget": "vite build --mode widget",
+    "dev:widget": "vite --mode widget"
   },
   "dependencies": {
     "@mdi/font": "5.9.55",

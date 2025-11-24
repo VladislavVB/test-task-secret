@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, ref } from 'vue'
+import { onMounted } from 'vue'
 import { useGeolocation } from '@/shared/composables/use-geolocation'
 import { storage } from '@/shared/libs/storage-utils'
 import { useWeatherCityStore } from '@/features/weather-city-list/model/weather-city-store'
@@ -31,3 +31,10 @@ onMounted(() => {
     </v-main>
   </v-app>
 </template>
+
+<style scoped>
+#app {
+  min-height: 100%;
+  width: 100%;
+}
+</style>
