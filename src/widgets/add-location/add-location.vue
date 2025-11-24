@@ -1,6 +1,7 @@
 <template>
   <h3>Add Location</h3>
   <v-text-field
+    v-auto-focus
     v-model="inputValue"
     dense
     label="City"

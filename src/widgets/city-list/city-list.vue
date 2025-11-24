@@ -1,41 +1,46 @@
 <template>
   <div class="d-flex flex-column">
-    <div
-      v-for="(city, index) in cities"
-      :key="index"
-      class="city-item mb-4"
-      :class="{ 'drag-over': dragOverIndex === index }"
-      @dragover.prevent="onDragOver(index, $event)"
-      @drop="onDrop(index, $event, handleCityMove)"
-      @dragenter.prevent="onDragEnter(index)"
-      @dragleave="onDragLeave"
-    >
+    <template v-if="cities.length">
       <div
-        class="drag-handle"
-        draggable="true"
-        @dragstart="onDragStart(index, $event)"
-        @dragend="onDragEnd"
+        v-for="(city, index) in cities"
+        :key="index"
+        class="city-item mb-4"
+        :class="{ 'drag-over': dragOverIndex === index }"
+        @dragover.prevent="onDragOver(index, $event)"
+        @drop="onDrop(index, $event, handleCityMove)"
+        @dragenter.prevent="onDragEnter(index)"
+        @dragleave="onDragLeave"
       >
-        <v-icon>mdi-menu</v-icon>
-      </div>
+        <div
+          class="drag-handle"
+          draggable="true"
+          @dragstart="onDragStart(index, $event)"
+          @dragend="onDragEnd"
+        >
+          <v-icon>mdi-menu</v-icon>
+        </div>
 
-      <div class="city-content">
-        <span>{{ city.name }}</span>
-      </div>
+        <div class="city-content">
+          <span>{{ city.name }}</span>
+        </div>
 
-      <div>
-        <v-btn icon variant="text" size="small" @click="emit('delete', index)">
-          <v-icon>mdi-trash-can-outline</v-icon>
-        </v-btn>
+        <div>
+          <v-btn icon variant="text" size="small" @click="emit('delete', index)">
+            <v-icon>mdi-trash-can-outline</v-icon>
+          </v-btn>
+        </div>
       </div>
+    </template>
+    <div v-else class="text-center my-4">
+      <p>Use "Add Location"</p>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from 'vue'
-import { useDragAndDrop } from '@/shared/composables/useDragAndDrop'
 import type { City } from '@/entities/city/city.interface'
+import { ref, watch } from 'vue'
+import { useDreagAndDrop } from '@/shared/composables/use-drag-and-drop'
 
 interface Props {
   cities: City[]
@@ -63,7 +68,7 @@ const {
   onDragLeave,
   onDrop,
   moveItem,
-} = useDragAndDrop()
+} = useDreagAndDrop()
 
 watch(
   () => props.cities,

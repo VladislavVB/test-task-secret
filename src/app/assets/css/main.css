@@ -58,3 +58,7 @@
   color: rgb(var(--v-theme-grey-800));
   background-color: rgba(var(--v-theme-on-surface), 0.04);
 }
+
+.v-skeleton-loader__text {
+  margin: 0;
+}

@@ -1,9 +1,11 @@
 import type { WeatherData } from '@/entities/weather-city/model/types'
+import type { City } from '@/entities/city/city.interface'
 import { defineStore } from 'pinia'
 import { apiClient } from '@/shared/api/base'
-import type { City } from '@/entities/city/city.interface'
+import { storage } from '@/shared/libs/storage-utils'
 
 interface WeatherCityState {
+  weatherCityList: WeatherData[]
   cityList: City[]
   loading: boolean
   error: string | null
@@ -11,28 +13,34 @@ interface WeatherCityState {
 
 export const useWeatherCityStore = defineStore('weather-city', {
   state: (): WeatherCityState => ({
-    cityList: [
-      {
-        name: 'Moscow',
-      },
-      { name: '11' },
-      { name: 'Казань' },
-      { name: 'Воронеж' },
-    ],
+    weatherCityList: [],
+    cityList: storage.get<City[]>('cityList') || [],
     error: null,
     loading: false,
   }),
 
+  getters: {
+    getWeatherCityList(state) {
+      return state.weatherCityList
+    },
+  },
+
   actions: {
+    saveCityList() {
+      storage.set('cityList', this.cityList)
+    },
+
     setCityList(cityList: City[]) {
       this.cityList = cityList
+      this.saveCityList()
     },
 
     deleteCity(index: number) {
       this.cityList.splice(index, 1)
+      this.saveCityList()
     },
 
-    addCity(cityName: string) {
+    async addCity(cityName: string, forceLoadCityes?: boolean) {
       const normalizedCityName = cityName.trim()
 
       const cityExists = this.cityList.some(
@@ -40,19 +48,17 @@ export const useWeatherCityStore = defineStore('weather-city', {
       )
 
       if (cityExists) {
-        // const error = `Город "${normalizedCityName}" уже существует в списке`
-        alert('No')
+        alert('Already there')
         return
       }
 
       this.cityList.push({ name: normalizedCityName })
+      this.saveCityList()
+      if (forceLoadCityes) await this.fetchMultipleCitiesWeather()
       return
     },
 
     async fetchCityWeather(cityName: string) {
-      this.loading = true
-      this.error = null
-
       try {
         const response = await apiClient.get('/weather', {
           params: {
@@ -61,36 +67,30 @@ export const useWeatherCityStore = defineStore('weather-city', {
         })
         return response.data
       } catch (error: any) {
-        this.error = error
-      } finally {
-        this.loading = false
+        console.error(error)
       }
     },
 
-    async fetchMultipleCitiesWeather(cityNames: string[]) {
+    async fetchMultipleCitiesWeather() {
+      console.log('1')
+
       this.loading = true
       this.error = null
 
       try {
-        const promises = cityNames.map((cityName) => this.fetchCityWeather(cityName))
-
+        const promises = this.$state.cityList.map((city) => this.fetchCityWeather(city.name))
         const results = await Promise.allSettled(promises)
-
         const successfulCities: WeatherData[] = []
-        const failedCities: string[] = []
 
-        results.forEach((result, index) => {
-          if (result.status === 'fulfilled') {
+        results.forEach((result) => {
+          console.log(1, result)
+
+          if (result.status === 'fulfilled' && result.value)
             successfulCities.push(result.value as WeatherData)
-          } else {
-            failedCities.push(cityNames[index] as string)
-          }
         })
-
-        return successfulCities
+        this.weatherCityList = successfulCities
       } catch (error: any) {
-        this.error = error.message || 'Ошибка при загрузке данных для нескольких городов'
-        throw error
+        this.error = error.message || 'Ошибка при загрузке данных'
       } finally {
         this.loading = false
       }

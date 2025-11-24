@@ -2,7 +2,7 @@
 import type { City } from '@/entities/city/city.interface'
 
 import { useRouter } from 'vue-router'
-import { useWeatherCityStore } from '@/features/weather-city-list/weather-city-store'
+import { useWeatherCityStore } from '@/features/weather-city-list/model/weather-city-store'
 import CityList from '@/widgets/city-list/city-list.vue'
 import AddLocation from '@/widgets/add-location/add-location.vue'
 

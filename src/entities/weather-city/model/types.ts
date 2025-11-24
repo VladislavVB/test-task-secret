@@ -1,55 +1,62 @@
 export interface WeatherData {
-  coordinates: GeoCoordinates
-  weatherConditions: WeatherCondition[]
-  dataSource: string
-  temperatureMetrics: TemperatureMetrics
+  coord: Coordinates
+  weather: WeatherCondition[]
+  base: string
+  main: MainWeatherData
   visibility: number
-  wind: WindInfo
-  clouds: CloudCoverage
-  timestamp: number
-  locationInfo: LocationInfo
-  timezoneOffset: number
-  cityId: number
-  cityName: string
-  responseCode: number
+  wind: WindData
+  rain?: RainData
+  clouds: CloudsData
+  dt: number
+  sys: SystemData
+  timezone: number
+  id: number
+  name: string
+  cod: number
 }
 
-export interface LocationInfo {
-  type: number
-  locationId: number
-  countryCode: string
-  sunrise: number
-  sunset: number
-}
-
-export interface CloudCoverage {
-  cloudinessPercent: number
-}
-
-export interface WindInfo {
-  speed: number
-  direction: number
-}
-
-export interface TemperatureMetrics {
-  current: number
-  feelsLike: number
-  minimum: number
-  maximum: number
-  pressure: number
-  humidity: number
-  seaLevelPressure: number
-  groundLevelPressure: number
+export interface Coordinates {
+  lon: number
+  lat: number
 }
 
 export interface WeatherCondition {
-  conditionId: number
-  category: string
+  id: number
+  main: string
   description: string
-  iconCode: string
+  icon: string
 }
 
-export interface GeoCoordinates {
-  longitude: number
-  latitude: number
+export interface MainWeatherData {
+  temp: number
+  feels_like: number
+  temp_min: number
+  temp_max: number
+  pressure: number
+  humidity: number
+  sea_level?: number
+  grnd_level?: number
+}
+
+export interface WindData {
+  speed: number
+  deg: number
+  gust?: number
+}
+
+export interface RainData {
+  '1h'?: number
+  '3h'?: number
+}
+
+export interface CloudsData {
+  all: number
+}
+
+export interface SystemData {
+  type: number
+  id: number
+  country: string
+  sunrise: number
+  sunset: number
 }

@@ -16,7 +16,7 @@ export interface DragAndDropComposable {
   moveItem: <T>(items: T[], fromIndex: number, toIndex: number) => T[]
 }
 
-export const useDragAndDrop = (): DragAndDropComposable => {
+export const useDreagAndDrop = (): DragAndDropComposable => {
   const dragStartIndex = ref<number | null>(null)
   const dragOverIndex = ref<number | null>(null)
 

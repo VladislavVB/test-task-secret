@@ -32,6 +32,7 @@ class ApiClient {
       },
       params: {
         appid: apiKey,
+        units: 'metric',
       },
     })
   }
