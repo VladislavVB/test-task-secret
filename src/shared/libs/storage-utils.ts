@@ -58,36 +58,6 @@ class LocalStorageManager {
     }
     return keys
   }
-
-  getMultiple<T>(keys: string[]): Record<string, T | null> {
-    const result: Record<string, T | null> = {}
-    keys.forEach((key) => {
-      result[key] = this.get<T>(key)
-    })
-    return result
-  }
-
-  setMultiple(items: Record<string, any>): boolean {
-    try {
-      Object.entries(items).forEach(([key, value]) => {
-        this.set(key, value)
-      })
-      return true
-    } catch (error) {
-      console.error(error)
-      return false
-    }
-  }
-
-  removeMultiple(keys: string[]): boolean {
-    try {
-      keys.forEach((key) => this.remove(key))
-      return true
-    } catch (error) {
-      console.error(error)
-      return false
-    }
-  }
 }
 
 export const storage = new LocalStorageManager()

@@ -1,13 +1,13 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue'
-
-const inputValue = ref('')
+import { ref } from 'vue'
 
 interface Emits {
   (e: 'submit', value: string): void
 }
 
 const emit = defineEmits<Emits>()
+
+const inputValue = ref('')
 
 const handleSubmit = () => {
   const trimmedValue = inputValue.value.trim()

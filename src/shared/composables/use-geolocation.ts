@@ -1,4 +1,5 @@
 import { ref, type Ref } from 'vue'
+import { storage } from '@/shared/libs/storage-utils'
 
 interface GeolocationOptions {
   enableHighAccuracy?: boolean
@@ -44,7 +45,7 @@ export const useGeolocation = (options: GeolocationOptions = {}): GeolocationRes
         null
       )
     } catch (err) {
-      console.error('Ошибка при получении города:', err)
+      console.error('Error getting city:', err)
       return null
     }
   }
@@ -55,13 +56,13 @@ export const useGeolocation = (options: GeolocationOptions = {}): GeolocationRes
       const data = await response.json()
       return data.city || null
     } catch (err) {
-      console.error('Ошибка при получении города по IP:', err)
+      console.error('Error getting city by IP:', err)
       return null
     }
   }
 
   const requestGeolocation = async (): Promise<void> => {
-    const savedCity = localStorage.getItem('userCity')
+    const savedCity = storage.get<string>('userCity')
     if (savedCity) {
       city.value = savedCity
       return
@@ -73,7 +74,7 @@ export const useGeolocation = (options: GeolocationOptions = {}): GeolocationRes
 
     try {
       if (!navigator.geolocation) {
-        throw new Error('Ваш браузер не поддерживает геолокацию')
+        throw new Error('Your browser does not support geolocation')
       }
 
       const position = await new Promise<GeolocationPosition>((resolve, reject) => {
@@ -89,36 +90,36 @@ export const useGeolocation = (options: GeolocationOptions = {}): GeolocationRes
 
       if (cityName) {
         city.value = cityName
-        localStorage.setItem('userCity', cityName)
+        storage.set('userCity', cityName)
       } else {
         const ipCity = await getCityByIP()
         if (ipCity) {
           city.value = ipCity
-          localStorage.setItem('userCity', ipCity)
+          storage.set('userCity', ipCity)
         }
       }
     } catch (err: any) {
-      console.error('Ошибка геолокации:', err)
+      console.error('Geolocation error:', err)
 
       switch (err.code) {
         case err.PERMISSION_DENIED:
-          error.value = 'Доступ к геолокации запрещен'
+          error.value = 'Geolocation access denied'
           break
         case err.POSITION_UNAVAILABLE:
-          error.value = 'Информация о местоположении недоступна'
+          error.value = 'Location information unavailable'
           break
         case err.TIMEOUT:
-          error.value = 'Время запроса истекло'
+          error.value = 'Request timeout'
           break
         default:
-          error.value = 'Не удалось определить местоположение'
+          error.value = 'Failed to determine location'
           break
       }
 
       const ipCity = await getCityByIP()
       if (ipCity) {
         city.value = ipCity
-        localStorage.setItem('userCity', ipCity)
+        storage.set('userCity', ipCity)
         error.value = null
       }
     } finally {

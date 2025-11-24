@@ -3,93 +3,101 @@ import type { City } from '@/entities/city/city.interface'
 import { defineStore } from 'pinia'
 import { apiClient } from '@/shared/api/base'
 import { storage } from '@/shared/libs/storage-utils'
+import { ref, computed } from 'vue'
 
-interface WeatherCityState {
-  weatherCityList: WeatherData[]
-  cityList: City[]
-  loading: boolean
-  error: string | null
-}
+export const useWeatherCityStore = defineStore('weather-city', () => {
+  // State
+  const weatherCityList = ref<WeatherData[]>([])
+  const cityList = ref<City[]>(storage.get<City[]>('cityList') || [])
+  const loading = ref(false)
+  const error = ref<string | null>(null)
 
-export const useWeatherCityStore = defineStore('weather-city', {
-  state: (): WeatherCityState => ({
-    weatherCityList: [],
-    cityList: storage.get<City[]>('cityList') || [],
-    error: null,
-    loading: false,
-  }),
+  // Getters
+  const getWeatherCityList = computed(() => weatherCityList.value)
 
-  getters: {
-    getWeatherCityList(state) {
-      return state.weatherCityList
-    },
-  },
+  // Actions
+  const saveCityList = () => {
+    storage.set('cityList', cityList.value)
+  }
 
-  actions: {
-    saveCityList() {
-      storage.set('cityList', this.cityList)
-    },
+  const setCityList = (cities: City[]) => {
+    cityList.value = cities
+    saveCityList()
+  }
 
-    setCityList(cityList: City[]) {
-      this.cityList = cityList
-      this.saveCityList()
-    },
+  const deleteCity = (index: number) => {
+    cityList.value.splice(index, 1)
+    saveCityList()
+  }
 
-    deleteCity(index: number) {
-      this.cityList.splice(index, 1)
-      this.saveCityList()
-    },
+  const addCity = async (cityName: string, forceLoadCityes?: boolean) => {
+    const normalizedCityName = cityName.trim()
 
-    async addCity(cityName: string, forceLoadCityes?: boolean) {
-      const normalizedCityName = cityName.trim()
+    const cityExists = cityList.value.some(
+      (city) => city.name.toLowerCase() === normalizedCityName.toLowerCase(),
+    )
 
-      const cityExists = this.cityList.some(
-        (city) => city.name.toLowerCase() === normalizedCityName.toLowerCase(),
-      )
-
-      if (cityExists) {
-        alert('Already there')
-        return
-      }
-
-      this.cityList.push({ name: normalizedCityName })
-      this.saveCityList()
-      if (forceLoadCityes) await this.fetchMultipleCitiesWeather()
+    if (cityExists) {
+      alert('Already there')
       return
-    },
+    }
 
-    async fetchCityWeather(cityName: string) {
-      try {
-        const response = await apiClient.get('/weather', {
-          params: {
-            q: cityName,
-          },
-        })
-        return response.data
-      } catch (error: any) {
-        console.error(error)
-      }
-    },
+    cityList.value.push({ name: normalizedCityName })
+    saveCityList()
+    if (forceLoadCityes) await fetchMultipleCitiesWeather()
+    return
+  }
 
-    async fetchMultipleCitiesWeather() {
-      this.loading = true
-      this.error = null
+  const fetchCityWeather = async (cityName: string) => {
+    try {
+      const response = await apiClient.get('/weather', {
+        params: {
+          q: cityName,
+        },
+      })
+      return response.data
+    } catch (error: any) {
+      console.error(error)
+    }
+  }
 
-      try {
-        const promises = this.$state.cityList.map((city) => this.fetchCityWeather(city.name))
-        const results = await Promise.allSettled(promises)
-        const successfulCities: WeatherData[] = []
+  const fetchMultipleCitiesWeather = async () => {
+    loading.value = true
+    error.value = null
 
-        results.forEach((result) => {
-          if (result.status === 'fulfilled' && result.value)
-            successfulCities.push(result.value as WeatherData)
-        })
-        this.weatherCityList = successfulCities
-      } catch (error: any) {
-        this.error = error.message || 'Ошибка при загрузке данных'
-      } finally {
-        this.loading = false
-      }
-    },
-  },
+    try {
+      const promises = cityList.value.map((city) => fetchCityWeather(city.name))
+      const results = await Promise.allSettled(promises)
+      const successfulCities: WeatherData[] = []
+
+      results.forEach((result) => {
+        if (result.status === 'fulfilled' && result.value)
+          successfulCities.push(result.value as WeatherData)
+      })
+      weatherCityList.value = successfulCities
+    } catch (error: any) {
+      error.value = error.message || 'Ошибка при загрузке данных'
+    } finally {
+      loading.value = false
+    }
+  }
+
+  return {
+    // State
+    weatherCityList,
+    cityList,
+    loading,
+    error,
+
+    // Getters
+    getWeatherCityList,
+
+    // Actions
+    saveCityList,
+    setCityList,
+    deleteCity,
+    addCity,
+    fetchCityWeather,
+    fetchMultipleCitiesWeather,
+  }
 })

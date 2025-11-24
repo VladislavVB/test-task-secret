@@ -17,8 +17,6 @@ function initWeatherWidget() {
     document.body.appendChild(container)
   }
 
-  console.log(1111, container)
-
   loadFonts()
 
   const pinia = createPinia()

@@ -1,24 +1,7 @@
 import axios from 'axios'
 import type { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios'
+import type { ApiResponse } from '@/shared/api/base/api.interface'
 import { WEATHER_URL, API_KEY_WEATHER } from '@/app/settings'
-
-export interface ApiResponse<T> {
-  data: T
-  status: number
-  message?: string
-}
-
-export interface PaginationParams {
-  page: number
-  limit: number
-}
-
-export interface PaginatedResponse<T> {
-  data: T[]
-  total: number
-  page: number
-  limit: number
-}
 
 class ApiClient {
   private client: AxiosInstance
